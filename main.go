@@ -9,10 +9,15 @@ import (
 )
 
 func main() {
+	if len(os.Args) < 2 || os.Args[1] == "-h" || os.Args[1] == "help" {
+		usage()
+		os.Exit(0)
+	}
+
 	timezones := os.Args[1:]
 	timezonesOffsets := []int{}
 	for _, t := range timezones {
-		if t[:3] != "utc" && t[:3] != "gmt" {
+		if len(t) < 3 || (t[:3] != "utc" && t[:3] != "gmt") {
 			invalidInput("Invalid timezone: " + t)
 		}
 		tNum := t[3:]
@@ -71,11 +76,15 @@ func getOffset(offset int) []int {
 	return offsetTimes
 }
 
-func invalidInput(message string) {
+func invalidInput(errorMessage string) {
 	fmt.Println()
-	fmt.Println(message)
+	fmt.Println(errorMessage)
+	usage()
+	os.Exit(2)
+}
+
+func usage() {
 	fmt.Println()
 	fmt.Println("Usage: overlap [timezone]...")
 	fmt.Println("e.g. overlap utc-4 utc+3")
-	os.Exit(2)
 }
