@@ -12,14 +12,19 @@ func main() {
 	timezones := os.Args[1:]
 	timezonesOffsets := []int{}
 	for _, t := range timezones {
+		if t[:3] != "utc" && t[:3] != "gmt" {
+			invalidInput("Invalid timezone: " + t)
+		}
 		tNum := t[3:]
 		if tNum == "" {
 			tNum = "0"
 		}
 		offset, err := strconv.Atoi(tNum)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(2)
+			invalidInput("Invalid timezone: " + t)
+		}
+		if offset < -12 || offset > 12 {
+			invalidInput("Invalid timezone: " + t)
 		}
 		timezonesOffsets = append(timezonesOffsets, offset)
 	}
@@ -64,4 +69,13 @@ func getOffset(offset int) []int {
 		}
 	}
 	return offsetTimes
+}
+
+func invalidInput(message string) {
+	fmt.Println()
+	fmt.Println(message)
+	fmt.Println()
+	fmt.Println("Usage: overlap [timezone]...")
+	fmt.Println("e.g. overlap utc-4 utc+3")
+	os.Exit(2)
 }
