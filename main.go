@@ -9,11 +9,13 @@ import (
 )
 
 func main() {
+	// check if help flag is passed
 	if len(os.Args) < 2 || os.Args[1] == "-h" || os.Args[1] == "help" {
 		usage()
 		os.Exit(0)
 	}
 
+	// get timezones and their offsets from cli args
 	timezones := os.Args[1:]
 	timezonesOffsets := []int{}
 	for _, t := range timezones {
@@ -34,12 +36,13 @@ func main() {
 		timezonesOffsets = append(timezonesOffsets, offset)
 	}
 
+	// create ansii table
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader(timezones)
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
 
+	// add times on data array
 	data := [][]string{}
-
 	for _, tz := range timezonesOffsets {
 		for i, v := range getOffset(tz) {
 			if len(data) >= i {
@@ -52,10 +55,13 @@ func main() {
 		}
 	}
 	table.AppendBulk(data)
+
+	// print result
 	fmt.Println()
 	table.Render()
 }
 
+// Get times by give offset.
 func getOffset(offset int) []int {
 	offsetTimes := []int{}
 	if offset >= 0 {
@@ -76,6 +82,7 @@ func getOffset(offset int) []int {
 	return offsetTimes
 }
 
+// Print error message on invalid input along with usage details.
 func invalidInput(errorMessage string) {
 	fmt.Println()
 	fmt.Println(errorMessage)
@@ -83,6 +90,7 @@ func invalidInput(errorMessage string) {
 	os.Exit(2)
 }
 
+// Print usage details.
 func usage() {
 	fmt.Println()
 	fmt.Println("Usage: overlap [timezone]...")
