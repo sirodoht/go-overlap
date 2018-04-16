@@ -1,0 +1,52 @@
+#!/bin/bash
+#
+# GoLang cross-compile snippet for Go 1.6+ based loosely on Dave Chaney's cross-compile script:
+# http://dave.cheney.net/2012/09/08/an-introduction-to-cross-compilation-with-go
+#
+# To use:
+#
+#   $ cd ~/path-to/my-awesome-project
+#   $ go-build-all
+#
+# Features:
+#
+#   * Cross-compiles to multiple machine types and architectures.
+#   * Uses the current directory name as the output name...
+#     * ...unless you supply an source file: $ go-build-all main.go
+#   * Windows binaries are named .exe.
+#
+# Requirements:
+#
+#   * GoLang 1.6+
+#   * CD to directory of the binary you are compiling. $PWD is used here.
+#
+
+# This PLATFORMS list contains the desirable platforms to be compiled.
+#
+PLATFORMS="darwin/amd64 windows/amd64 linux/amd64"
+
+
+type setopt >/dev/null 2>&1
+
+SCRIPT_NAME=`basename "$0"`
+FAILURES=""
+SOURCE_FILE=`echo $@ | sed 's/\.go//'`
+CURRENT_DIRECTORY=${PWD##*/}
+OUTPUT=${SOURCE_FILE:-$CURRENT_DIRECTORY} # if no src file given, use current dir name
+
+for PLATFORM in $PLATFORMS; do
+  GOOS=${PLATFORM%/*}
+  GOARCH=${PLATFORM#*/}
+  BIN_FILENAME="${OUTPUT}-${GOOS}-${GOARCH}"
+  if [[ "${GOOS}" == "windows" ]]; then BIN_FILENAME="${BIN_FILENAME}.exe"; fi
+  CMD="GOOS=${GOOS} GOARCH=${GOARCH} go build -o ${BIN_FILENAME} $@"
+  echo "${CMD}"
+  eval $CMD || FAILURES="${FAILURES} ${PLATFORM}"
+done
+
+# eval errors
+if [[ "${FAILURES}" != "" ]]; then
+  echo ""
+  echo "${SCRIPT_NAME} failed on: ${FAILURES}"
+  exit 1
+fi
