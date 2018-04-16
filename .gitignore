@@ -1,6 +1,6 @@
-go-overlap
 overlap
+go-overlap
 go-overlap-darwin-amd64
 go-overlap-linux-amd64
 go-overlap-windows-amd64.exe
-go-build-all.sh
+build.sh
