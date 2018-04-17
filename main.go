@@ -50,7 +50,12 @@ func main() {
 			}
 			timeStr := strconv.Itoa(v) + ":00"
 			timeStrZeroPad := tablewriter.PadLeft(timeStr, "0", 5)
-			timeStrSpacePad := tablewriter.Pad(timeStrZeroPad, " ", 9)
+			if v >= 9 && v <= 18 {
+				timeStrZeroPad = "● " + timeStrZeroPad
+			} else {
+				timeStrZeroPad = "  " + timeStrZeroPad
+			}
+			timeStrSpacePad := tablewriter.Pad(timeStrZeroPad, " ", 12)
 			data[i] = append(data[i], timeStrSpacePad)
 		}
 	}
