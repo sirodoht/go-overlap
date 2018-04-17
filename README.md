@@ -2,6 +2,21 @@
 
 Overlap timezone utility
 
+## Install
+
+```sh
+go get github.com/sirodoht/go-overlap
+```
+
+Also, there are compiled binaries at the [releases page](https://github.com/sirodoht/go-overlap/releases).
+
+After downloading you need to make them executable:
+```sh
+chmod +x go-overlap-darwin-amd64
+mv go-overlap-darwin-amd64 overlap
+./overlap utc utc-3
+```
+
 ## Use
 
 ```
