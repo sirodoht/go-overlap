@@ -12,9 +12,9 @@ Also, there are compiled binaries at the [releases page](https://github.com/siro
 
 After downloading you need to make them executable:
 ```sh
-chmod +x go-overlap-darwin-amd64
-mv go-overlap-darwin-amd64 overlap
-./overlap utc utc-3
+$ chmod +x go-overlap-darwin-amd64
+$ mv go-overlap-darwin-amd64 overlap
+$ ./overlap utc utc-3
 ```
 
 ## Use
